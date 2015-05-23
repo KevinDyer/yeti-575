@@ -1,0 +1,24 @@
+{
+  "name": "project-yeti-575",
+  "version": "0.1.0",
+  "description": "The frontend display for project yeti.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "npm",
+    "bower",
+    "angular",
+    "bootstrap",
+    "polymer",
+    "express",
+    "socket.io"
+  ],
+  "author": "SKiddem",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.12.4"
+  }
+}
