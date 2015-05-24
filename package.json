@@ -1,9 +1,10 @@
 {
-  "name": "project-yeti-575",
+  "name": "yeti-575",
   "version": "0.1.0",
   "description": "The frontend display for project yeti.",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,8 +17,7 @@
     "express",
     "socket.io"
   ],
-  "author": "SKiddem",
-  "license": "MIT",
+  "author": "KevinDyer <kevin.m.dyer@gmail.com>",
   "dependencies": {
     "express": "^4.12.4"
   }
