@@ -4,7 +4,7 @@
   "description": "The frontend display for project yeti.",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "grunt yeti575:dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,6 +19,12 @@
   ],
   "author": "KevinDyer <kevin.m.dyer@gmail.com>",
   "dependencies": {
-    "express": "^4.12.4"
+    "express": "^4.12.4",
+    "promise": "~7.0.1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "load-grunt-tasks": "~3.2.0",
+    "time-grunt": "~1.2.1"
   }
 }

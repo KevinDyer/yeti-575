@@ -1,20 +1,22 @@
 (function() {
   'use strict';
 
-  var express = require('express');
-  var app = express();
+  var util = require('util');
 
-  // Serve the dependencies
-  app.use('/bower_components', express.static('bower_components'));
+  var express = require('express');
+  var promise = require('promise');
+
+  var dataRoute = require('./routes/data.js');
+
+  var app = express();
 
   // Serve the app directory
   app.use(express.static('app'));
+  // Serve the bower dependencies directory
+  app.use('/bower_components', express.static('bower_components'));
 
-  app.post('/uploads', function(request, response) {
-    response.sendStatus(201);
-  });
+  // Add the data route
+  app.route('/data', dataRoute);
 
-  app.listen(8000, function() {
-    console.log('Listening on *8000');
-  });
+  module.exports = app;
 }());
