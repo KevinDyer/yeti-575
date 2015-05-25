@@ -8,6 +8,11 @@
       controller: 'UploadIndexController',
       controllerAs: 'indexController'
     })
+    .when('/about', {
+      templateUrl: 'templates/pages/about/index.html',
+      controller: 'AboutIndexController',
+      controllerAs: 'indexController'
+    })
     .when('/', {
       redirectTo: '/upload',
     })
