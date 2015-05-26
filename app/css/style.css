@@ -1,0 +1,12 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 20px;
+}
+.drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #1976D2;
+  height: 128px;
+  padding-top: 24px;
+  text-align: center;
+  margin: 10px;
+}

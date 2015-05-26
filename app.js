@@ -16,7 +16,7 @@
   app.use('/bower_components', express.static('bower_components'));
 
   // Add the data route
-  app.route('/data', dataRoute);
+  app.use('/data', dataRoute);
 
   module.exports = app;
 }());

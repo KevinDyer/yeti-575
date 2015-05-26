@@ -3,9 +3,9 @@
 
   angular.module('Yeti575')
   .config(function($routeProvider) {
-    $routeProvider.when('/upload', {
-      templateUrl: 'templates/pages/upload/index.html',
-      controller: 'UploadIndexController',
+    $routeProvider.when('/data', {
+      templateUrl: 'templates/pages/data/index.html',
+      controller: 'DataIndexController',
       controllerAs: 'indexController'
     })
     .when('/about', {
@@ -14,7 +14,7 @@
       controllerAs: 'indexController'
     })
     .when('/', {
-      redirectTo: '/upload',
+      redirectTo: '/data',
     })
     .otherwise({redirectTo: '/'});
   });
