@@ -9,11 +9,6 @@
     $scope.files = [];
 
     $scope.fileDropped = function($files, $event, $rejectedFiles) {
-      console.log($files);
-      console.log($event);
-      console.log($rejectedFiles);
-
-      console.log($scope.files);
     };
 
     $scope.upload = function(files) {

@@ -1,6 +1,10 @@
 (function () {
   'use strict';
 
+  var fs = require('fs');
+  var os = require('os');
+  var path = require('path');
+
   var express = require('express');
   var busboy = require('connect-busboy');
   var router = express.Router();
@@ -16,16 +20,23 @@
     var busboy = request.busboy;
     if (busboy) {
       busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
-        file.on('data', function(data) {
-          //console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
-        });
+        var saveTo = path.join(os.tmpDir(), path.basename(filename));
+
+        // Check if the file already exists in the data files
+        if (dataFiles.indexOf(saveTo) >= 0) {
+          response.status(400).json('File already exists');
+          return;
+        }
+
+        file.pipe(fs.createWriteStream(saveTo));
         file.on('end', function() {
-          console.log('File [' + fieldname + '] Finished');
+          console.log('File [' + filename + '] Finished');
+          dataFiles.push(saveTo);
         });
       });
       busboy.on('finish', function() {
-        response.status(303).json(true);
+        //response.writeHead(200, { 'Connection': 'close' });
+        response.sendStatus(200);
       });
       request.pipe(busboy);
     }
