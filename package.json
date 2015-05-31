@@ -1,0 +1,22 @@
+{
+  "name": "yeti-575",
+  "version": "0.1.1",
+  "description": "The backend processing for project yeti.",
+  "main": "app.js",
+  "scripts": {
+    "start": "gulp"
+  },
+  "keywords": [
+    "node",
+    "npm",
+    "gulp",
+    "nodemon",
+    "mocha"
+  ],
+  "author": "KevinDyer <kevin.m.dyer@gmail.com>",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-nodemon": "^2.0.3"
+  }
+}
