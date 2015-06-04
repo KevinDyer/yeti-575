@@ -1,0 +1,21 @@
+{
+  "name": "yeti-575",
+  "version": "0.0.1",
+  "homepage": "https://github.com/mountainraptor/yeti-575",
+  "authors": [
+    "Kevin Dyer <kevin.m.dyer@gmail.com>"
+  ],
+  "main": "index.hmtl",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#~0.7.3",
+    "polymer": "Polymer/polymer#~1.0.2"
+  }
+}
