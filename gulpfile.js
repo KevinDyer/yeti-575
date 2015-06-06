@@ -30,20 +30,14 @@
 
   gulp.task('backend', function() {
     nodemon({
-      script: 'backend/server.js',
+      script: 'backend/app.js',
       ext: 'js',
       env: {
         NODE_ENV: 'development'
       }
     })
-    .on('start', ['watch'], function() {
+    .on('start', ['lint'], function() {
       console.log('*** Start ***');
-    })
-    .on('change', ['watch'], function() {
-      console.log('*** Change ***');
-    })
-    .on('restart', ['watch'], function() {
-      console.log('*** Restart ***');
     });
   });
 

@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "gulp",
-    "test": "mocha --reporter spec backend/tests"
+    "test": "mocha --reporter spec"
   },
   "keywords": [
     "node",
@@ -17,6 +17,8 @@
   "author": "KevinDyer <kevin.m.dyer@gmail.com>",
   "dependencies": {
     "express": "^4.12.4",
+    "morgan": "^1.5.3",
+    "multer": "^0.1.8",
     "promise": "^7.0.1",
     "sqlite3": "^3.0.8"
   },

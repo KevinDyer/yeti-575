@@ -1,40 +1,24 @@
 (function() {
   'use strict';
 
-  var fs = require('fs');
-  var path = require('path');
+  var express = require('express');
+  var morgan = require('morgan');
 
-  var Promise = require('promise');
+  var fileRouter = require('./routes/file');
 
-  var Analyzer = require('./lib/analyzer');
+  var app = express();
 
-  var FILES_DIR = path.resolve('backend/files');
+  app.use(morgan('combined'));
 
-  var readdir = function(path) {
-    return new Promise(function(fulfill, reject) {
-      fs.readdir(path, function(error, files) {
-        if (error) {
-          reject(error);
-        } else {
-          fulfill(files);
-        }
-      });
-    });
-  };
+  // Add route for bower components
+  app.use('/bower_components', express.static('bower_components'));
+  // Add route for the app
+  app.use(express.static('frontend'));
 
-  // Read all files from the files directory
-  readdir(FILES_DIR)
-  // TODO Analyze each data file
-  .then(function(files) {
-    for (var i = 0; i  < files.length; i++) {
-      var file = files[i];
-      var filePath = path.resolve(FILES_DIR, file);
-      console.log(filePath);
-      var analyzer = new Analyzer(filePath);
-    }
-  })
-  .then(null, function(error) {
-    console.log(error);
-  });
-  
+  // Add the file route
+  app.use('/file', fileRouter);
+
+  // Start the server listening
+  app.listen(3000);
+
 }());
