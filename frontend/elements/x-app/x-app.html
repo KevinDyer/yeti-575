@@ -1,0 +1,73 @@
+<dom-module id="x-app">
+  <style>
+    .toolbar {
+      background-color: var(--dark-primary-color);
+    }
+    .title {
+      @apply(--app-toolbar-title-theme)
+    }
+    .card {
+      margin: 8px;
+      padding: 8px;
+      min-width: 200px;
+      height: 200px;
+    }
+  </style>
+  <template>
+
+    <paper-header-panel class="fit">
+
+      <paper-toolbar class="toolbar">
+        <div class="title">Yeti 575</div>
+        <span class="flex"></span>
+        <div>more?</div>
+      </paper-toolbar>
+
+      <div class="container">
+        <paper-material class="card center" elevation="1">
+          <paper-input label="Display Name" bind-value="{{displayName}}"></paper-input>
+          <input type="file" files="{{files::change}}">
+          <paper-button raised on-tap="submitForm">Submit</paper-button>
+        </paper-material>
+      </div>
+
+    </paper-header-panel>
+
+  </template>
+</dom-module>
+
+<script>
+  (function(Polymer) {
+
+    Polymer({
+      is: 'x-app',
+
+      properties: {
+        files: {
+          type: Array
+        },
+        displayName: {
+          type: String
+        }
+      },
+
+      submitForm: function() {
+        var formData = new FormData();
+
+        // Add the display name
+        formData.append("displayName", this.displayName);
+
+        // Add files to the form data
+        for (var i = 0; i < this.files.length; i++) {
+          formData.append('datafile-' + i, this.files[i]);
+        }
+
+        // Create the request
+        var request = new XMLHttpRequest();
+        request.open('POST', '/file');
+        request.send(formData);
+      }
+    });
+
+  }(Polymer));
+</script>

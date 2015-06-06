@@ -12,8 +12,6 @@
     // TODO Read the uploads directory for files
   })
   .post(multer({dest: './uploads/'}), function(req, res) {
-    console.log(req.body);
-    console.log(req.files);
     res.sendStatus(204);
   });
 
