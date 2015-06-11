@@ -4,8 +4,6 @@
   "description": "The backend processing for project yeti.",
   "main": "app.js",
   "scripts": {
-    "start": "gulp",
-    "test": "mocha --reporter spec"
   },
   "keywords": [
     "node",
@@ -23,14 +21,5 @@
     "sqlite3": "^3.0.8"
   },
   "devDependencies": {
-    "chai": "^2.3.0",
-    "gulp": "^3.8.11",
-    "gulp-jshint": "^1.11.0",
-    "gulp-mocha": "^2.1.0",
-    "gulp-nodemon": "^2.0.3",
-    "gulp-util": "^3.0.5",
-    "gulp-vulcanize": "^6.0.1",
-    "mocha": "^2.2.5",
-    "request": "^2.56.0"
   }
 }
