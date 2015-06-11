@@ -36,9 +36,7 @@
         NODE_ENV: 'development'
       }
     })
-    .on('start', ['lint'], function() {
-      console.log('*** Start ***');
-    });
+    .on('start', ['lint']);
   });
 
   gulp.task('default', ['lint', 'test', 'watch']);

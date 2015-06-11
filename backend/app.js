@@ -8,7 +8,7 @@
 
   var app = express();
 
-  app.use(morgan('combined'));
+  app.use(morgan('tiny'));
 
   // Add route for bower components
   app.use('/bower_components', express.static('bower_components'));
