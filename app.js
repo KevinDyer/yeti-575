@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  var PORT = process.env.PORT || 80;
+
   var express = require('express');
   var morgan = require('morgan');
 
@@ -19,6 +21,7 @@
   app.use('/file', fileRouter);
 
   // Start the server listening
-  app.listen(3000);
-
+  app.listen(PORT, function() {
+    console.log('Listening on ' + PORT);
+  });
 }());

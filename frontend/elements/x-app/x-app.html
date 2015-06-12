@@ -6,11 +6,11 @@
     .title {
       @apply(--app-toolbar-title-theme)
     }
-    .card {
+    .item {
       margin: 8px;
       padding: 8px;
-      min-width: 200px;
-      height: 200px;
+      border-radius: 2px;
+      background-color: var(--disabled-text-color);
     }
   </style>
   <template>
@@ -20,13 +20,30 @@
       <paper-toolbar class="toolbar">
         <div class="title">Yeti 575</div>
         <span class="flex"></span>
-        <div>more?</div>
+        <paper-icon-button icon="file-upload" on-tap="onUploadFile"></paper-icon-button>
       </paper-toolbar>
 
       <div class="container fit">
+  
+        <template is="dom-repeat" items="{{files}}">
+          <div class="item layout horizontal">
+            <div>{{item.filename}}</div>
+            <span class="flex"></span>
+            <div>{{item.count}}</div>
+          </div>
+        </template>
       </div>
 
     </paper-header-panel>
+
+    <paper-dialog id="dialog">
+      <h2>Choose file to upload</h2>
+      <input type="file" files="{{uploadFileList::change}}" />
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="uploadFile">Upload</paper-button>
+      </div>
+    </paper-dialog>
 
     <iron-ajax
         id="files_request"
@@ -49,33 +66,43 @@
         files: {
           type: Array
         },
-        displayName: {
-          type: String
+        uploadFileList: {
+          type: Object
         }
-      },
-
-      ready: function() {
       },
 
       handleResponse: function(e, request) {
         this.files = request.response
       },
 
-      submitForm: function() {
+      onUploadFile: function() {
+        this.$.dialog.open();
+      },
+
+      uploadFile: function() {
+        if (!this.uploadFileList || 0 >= this.uploadFileList.length) {
+          return;
+        }
+
         var formData = new FormData();
 
         // Add the display name
-        formData.append("displayName", this.displayName);
+        formData.append('displayName', 'My display name');
 
         // Add files to the form data
-        for (var i = 0; i < this.files.length; i++) {
-          formData.append('datafile-' + i, this.files[i]);
+        for (var i = 0; i < this.uploadFileList.length; i++) {
+          formData.append('datafile-' + i, this.uploadFileList[i]);
         }
 
         // Create the request
         var request = new XMLHttpRequest();
         request.open('POST', '/file');
         request.send(formData);
+  
+        var self = this;
+        setTimeout(function() {
+          self.$.files_request.generateRequest();
+        }, 250);
       }
     });
 

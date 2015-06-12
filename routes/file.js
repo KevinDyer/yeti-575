@@ -61,9 +61,8 @@
     });
   })
   .post(multer({dest: './uploads/'}), function(req, res) {
-    // TODO Check if there is a display name
+    // Check if there is a display name
     var displayName = req.body.displayName;
-    console.log(displayName);
     if (!displayName) {
       res.status(422).json('Display name missing.');
       return;
