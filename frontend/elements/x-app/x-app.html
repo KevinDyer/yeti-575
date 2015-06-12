@@ -24,12 +24,13 @@
       </paper-toolbar>
 
       <div class="container fit">
-  
+
         <template is="dom-repeat" items="{{files}}">
-          <div class="item layout horizontal">
-            <div>{{item.filename}}</div>
+          <div class="item layout horizontal center">
+            <div>{{item.displayName}}</div>
             <span class="flex"></span>
             <div>{{item.count}}</div>
+            <paper-icon-button icon="delete" on-tap="onDeleteFile"></paper-icon-button>
           </div>
         </template>
       </div>

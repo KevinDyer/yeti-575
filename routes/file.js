@@ -4,78 +4,60 @@
   var fs = require('fs');
   var path = require('path');
 
+  var UPLOAD_DIR = path.resolve('./uploads');
+
   var Promise = require('promise');
   var express = require('express');
   var multer = require('multer');
   var Router = express.Router;
+  var YetiDbReader = require('./../lib/yeti-db-reader');
 
   var router = new Router();
 
-  function readdir(dirPath) {
-    return new Promise(function(fulfill, reject) {
-      fs.readdir(dirPath, function(err, files) {
-        if (err) {
-          reject(err);
-        } else {
-          fulfill(files);
-        }
-      });
-    });
-  }
+  var sId = 0;
+  var files = [];
 
-  function stat(filePath) {
-    return new Promise(function(fulfill, reject) {
-      fs.stat(filePath, function(err, stat) {
-        if (err) {
-          reject(err);
-        } else {
-          fulfill(stat);
-        }
-      });
-    });
-  }
+  // TODO Read files from the upload directory and analyze them
 
   router.route('/')
   .get(function(req, res) {
-    var uploadDir = path.resolve('./uploads');
-
-    readdir(uploadDir)
-    .then(function(files) {
-      return Promise.all(files.map(function(file) {
-        var filePath = path.resolve(uploadDir, file);
-        return stat(filePath);
-      }))
-      .then(function(stats) {
-        var filteredFiles = [];
-        for (var i = 0; i < files.length; i++) {
-          if (stats[i].isFile()) {
-            filteredFiles.push(stats[i]);
-            filteredFiles[filteredFiles.length-1].filename = files[i];
-          }
-        }
-        res.status(200).json(filteredFiles);
+    var filteredFiles = [];
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      filteredFiles.push({
+        id: file.id,
+        displayName: file.displayName,
+        count: Object.keys(file.data).length
       });
-    })
-    .then(null, function(err) {
-      res.status(401).json(err.toString());
-    });
+    }
+    res.status(200).json(filteredFiles);
   })
-  .post(multer({dest: './uploads/'}), function(req, res) {
-    // Check if there is a display name
-    var displayName = req.body.displayName;
-    if (!displayName) {
-      res.status(422).json('Display name missing.');
-      return;
-    }
-
+  .post(multer({dest: UPLOAD_DIR}), function(req, res) {
     var filenames = Object.keys(req.files);
-    for (var i = 0; i < filenames.length; i++) {
-      var filename = filenames[i];
-      files[filename] = req.files[filename];
-      files[filename].timestamp = Date.now();
-      files[filename].displayName = displayName;
-    }
-    res.sendStatus(204);
+    Promise.all(filenames.map(function(filename) {
+      var filePath = req.files[filename].path;
+      console.log(req.files[filename]);
+
+      var yetiDbReader = new YetiDbReader(filePath);
+      return yetiDbReader.getData()
+      .then(function(data) {
+        files.push({
+          id: sId++,
+          displayName: req.files[filename].originalname,
+          data: data,
+          timestamp: Date.now()
+        });
+        return Promise.resolve(files[files.length-1]);
+      }, function(err) {
+        console.log(err);
+        return Promise.resolve();
+      });
+    }))
+    .then(function(file) {
+      res.status(204).json(file);
+    }, function(err) {
+      res.sendStatus(522);
+    });
   });
 
   module.exports = router;
