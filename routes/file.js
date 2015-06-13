@@ -36,7 +36,6 @@
     var filenames = Object.keys(req.files);
     Promise.all(filenames.map(function(filename) {
       var filePath = req.files[filename].path;
-      console.log(req.files[filename]);
 
       var yetiDbReader = new YetiDbReader(filePath);
       return yetiDbReader.getData()

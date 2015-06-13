@@ -12,6 +12,9 @@
       border-radius: 2px;
       background-color: var(--disabled-text-color);
     }
+    .iron-selected {
+      background-color: #39f;
+    }
   </style>
   <template>
 
@@ -25,6 +28,7 @@
 
       <div class="container fit">
 
+        <iron-selector selected="{{selected}}">
         <template is="dom-repeat" items="{{files}}">
           <div class="item layout horizontal center">
             <div>{{item.displayName}}</div>
@@ -33,6 +37,8 @@
             <paper-icon-button icon="delete" on-tap="onDeleteFile"></paper-icon-button>
           </div>
         </template>
+        </iron-selector>
+
       </div>
 
     </paper-header-panel>
@@ -69,7 +75,14 @@
         },
         uploadFileList: {
           type: Object
+        },
+        selected: {
+          type: String,
+          observer: '_selectedChanged'
         }
+      },
+
+      _selectedChanged: function() {
       },
 
       handleResponse: function(e, request) {
