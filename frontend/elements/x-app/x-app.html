@@ -117,6 +117,17 @@
         setTimeout(function() {
           self.$.files_request.generateRequest();
         }, 250);
+      },
+
+      onDeleteFile: function(e) {
+        var request = new XMLHttpRequest();
+        request.open('DELETE', '/file/' + e.model.item.id);
+        request.send();
+  
+        var self = this;
+        setTimeout(function() {
+          self.$.files_request.generateRequest();
+        }, 250);
       }
     });
 

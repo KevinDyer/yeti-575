@@ -90,5 +90,20 @@
     });
   });
 
+  router.route('/:id')
+  .delete(function(req, res) {
+    var id = parseInt(req.params.id, 10);
+
+    for (var i = 0; i < fileList.length; i++) {
+      var file = fileList[i];
+      if (file.id === id) {
+        fileList.splice(i, 1);
+        res.sendStatus(204);
+        return;
+      }
+    }
+    res.sendStatus(411);
+  });
+
   module.exports = router;
 }());
