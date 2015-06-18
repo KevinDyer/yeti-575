@@ -67,14 +67,7 @@
       return getAndAddDataFromFile(file);
     }))
     .then(function() {
-      return UtilFs.writeJSON(FILE_LIST_FILENAME, fileList.map(function(file) {
-        return {
-          name: file.name,
-          originalname: file.originalname,
-          path: file.path,
-          timestamp: file.timestamp
-        };
-      }));
+      return writeFileList();
     })
     .then(function() {
       var filteredFiles = fileList.map(function(file) {
@@ -90,19 +83,64 @@
     });
   });
 
+  var findFileIndexById = function(id) {
+    for (var i = 0; i < fileList.length; i++) {
+      var file = fileList[i];
+      if (id === file.id) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+  var findFileById = function(id) {
+    var index = findFileIndexById(id);
+    if (0 > index) {
+      return Promise.reject(new Error('No file with id ' + id));
+    }
+    var file = fileList[index];
+    return Promise.resolve(file);
+  };
+
+  var removeFileFromFileList = function(file) {
+    var index = findFileIndexById(file.id);
+    if (0 > index) {
+      return Promise.reject(new Error('No file with id ' + id));
+    }
+    fileList.splice(index, 1);
+    return Promise.resolve();
+  };
+
+  var writeFileList = function() {
+    return UtilFs.writeJSON(FILE_LIST_FILENAME, fileList.map(function(file) {
+      return {
+        name: file.name,
+        originalname: file.originalname,
+        path: file.path,
+        timestamp: file.timestamp
+      };
+    }));
+  };
+
   router.route('/:id')
   .delete(function(req, res) {
     var id = parseInt(req.params.id, 10);
 
-    for (var i = 0; i < fileList.length; i++) {
-      var file = fileList[i];
-      if (file.id === id) {
-        fileList.splice(i, 1);
-        res.sendStatus(204);
-        return;
-      }
-    }
-    res.sendStatus(411);
+    findFileById(id)
+    .then(function(file) {
+      return UtilFs.unlink(file.path)
+      .then(function() {
+        return removeFileFromFileList(file);
+      });
+    })
+    .then(function() {
+      return writeFileList();
+    })
+    .then(function() {
+      res.sendStatus(204);
+    }, function(err) {
+      res.sendStatus(412);
+    });
   });
 
   module.exports = router;
