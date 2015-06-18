@@ -1,26 +1,20 @@
 <dom-module id="x-app">
   <style>
-    .toolbar {
-      background-color: var(--dark-primary-color);
-    }
-    .title {
-      @apply(--app-toolbar-title-theme)
-    }
     .item {
       margin: 8px;
       padding: 8px;
       border-radius: 2px;
-      background-color: var(--disabled-text-color);
+      background-color: #fff;
     }
     .iron-selected {
-      background-color: #39f;
+      background-color: var(--paper-light-blue-50);
     }
   </style>
   <template>
 
     <paper-header-panel class="fit">
 
-      <paper-toolbar class="toolbar">
+      <paper-toolbar>
         <div class="title">Yeti 575</div>
         <span class="flex"></span>
         <paper-icon-button icon="file-upload" on-tap="onUploadFile"></paper-icon-button>
@@ -28,14 +22,17 @@
 
       <div class="container fit">
 
-        <iron-selector selected="{{selected}}">
+        <iron-selector selectedItems="{{selectedItems}}" multi>
         <template is="dom-repeat" items="{{files}}">
-          <div class="item layout horizontal center">
-            <div>{{item.displayName}}</div>
+          <paper-icon-item class="item">
+            <iron-icon icon="settings" item-icon></iron-icon>
+            <paper-item-body two-line>
+              <div>{{item.displayName}}</div>
+              <div secondary>{{item.count}}</div>
+            </paper-item-body>
             <span class="flex"></span>
-            <div>{{item.count}}</div>
             <paper-icon-button icon="delete" on-tap="onDeleteFile"></paper-icon-button>
-          </div>
+          </paper-icon-item>
         </template>
         </iron-selector>
 
@@ -76,13 +73,14 @@
         uploadFileList: {
           type: Object
         },
-        selected: {
-          type: String,
-          observer: '_selectedChanged'
+        selectedItems: {
+          type: Array,
+          observer: '_selectedItemsChanged'
         }
       },
 
-      _selectedChanged: function() {
+      _selectedItemsChanged: function() {
+        console.log(this.selectedItems);
       },
 
       handleResponse: function(e, request) {
