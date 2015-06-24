@@ -19,20 +19,6 @@
   var sId = 0;
   var fileList = [];
 
-  // TODO Read files from the upload directory and analyze them
-  UtilFs.readJSON(FILE_LIST_FILENAME)
-  .then(function(fileList) {
-    return Promise.all(fileList.map(function(file) {
-      return getAndAddDataFromFile(file)
-      .then(null, function(err) {
-        console.log(err);
-      });
-    }));
-  })
-  .then(function() {
-    console.log('Finished loading previously uploaded files.');
-  });
-
   var getAndAddDataFromFile = function(file) {
     var yetiDbReader = new YetiDbReader(file.path);
     return yetiDbReader.getData()
@@ -48,40 +34,6 @@
       return Promise.resolve(fileList[fileList.length-1]);
     });
   };
-
-  router.route('/')
-  .get(function(req, res) {
-    var filteredFiles = fileList.map(function(file) {
-      return {
-        id: file.id,
-        displayName: file.originalname,
-        count: Object.keys(file.data).length
-      };
-    });
-    res.status(200).json(filteredFiles);
-  })
-  .post(multer({dest: UPLOAD_DIR}), function(req, res) {
-    var filenames = Object.keys(req.files);
-    Promise.all(filenames.map(function(filename) {
-      var file = req.files[filename];
-      return getAndAddDataFromFile(file);
-    }))
-    .then(function() {
-      return writeFileList();
-    })
-    .then(function() {
-      var filteredFiles = fileList.map(function(file) {
-        return {
-          id: file.id,
-          displayName: file.originalname,
-          count: Object.keys(file.data).length
-        };
-      });
-      res.status(204).json(filteredFiles);
-    }, function(err) {
-      res.status(422).json(err);
-    });
-  });
 
   var findFileIndexById = function(id) {
     for (var i = 0; i < fileList.length; i++) {
@@ -121,6 +73,54 @@
       };
     }));
   };
+
+  // TODO Read files from the upload directory and analyze them
+  UtilFs.readJSON(FILE_LIST_FILENAME)
+  .then(function(fileList) {
+    return Promise.all(fileList.map(function(file) {
+      return getAndAddDataFromFile(file)
+      .then(null, function(err) {
+        console.log(err);
+      });
+    }));
+  })
+  .then(function() {
+    console.log('Finished loading previously uploaded files.');
+  });
+
+  router.route('/')
+  .get(function(req, res) {
+    var filteredFiles = fileList.map(function(file) {
+      return {
+        id: file.id,
+        displayName: file.originalname,
+        count: Object.keys(file.data).length
+      };
+    });
+    res.status(200).json(filteredFiles);
+  })
+  .post(multer({dest: UPLOAD_DIR}), function(req, res) {
+    var filenames = Object.keys(req.files);
+    Promise.all(filenames.map(function(filename) {
+      var file = req.files[filename];
+      return getAndAddDataFromFile(file);
+    }))
+    .then(function() {
+      return writeFileList();
+    })
+    .then(function() {
+      var filteredFiles = fileList.map(function(file) {
+        return {
+          id: file.id,
+          displayName: file.originalname,
+          count: Object.keys(file.data).length
+        };
+      });
+      res.status(204).json(filteredFiles);
+    }, function(err) {
+      res.status(422).json(err);
+    });
+  });
 
   router.route('/:id')
   .delete(function(req, res) {
