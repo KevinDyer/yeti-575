@@ -4,11 +4,14 @@
   var http = require('http');
   var express = require('express');
   var morgan = require('morgan');
+  var Promise = require('promise');
   var fileRouter = require('./routes/file');
 
   var Server = function() {
     this.app = express();
-    this.app.use(morgan('tiny'));
+
+    // Add logging middleware
+    this.app.use(morgan('short'));
 
     // Add route for bower components
     this.app.use('/bower_components', express.static('bower_components'));
@@ -19,15 +22,11 @@
     this.app.use('/file', fileRouter);
   };
 
-  Server.prototype.initialize = function() {
-    return Promise.resolve(this);
-  };
-
   Server.prototype.connect = function(port) {
     var self = this;
     return new Promise(function(fulfill, reject) {
       var server = http.createServer(self.app);
-      server.on('error', reject);
+      server.once('error', reject);
       server.listen(port, function() {
         fulfill(server);
       });

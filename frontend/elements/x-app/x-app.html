@@ -27,8 +27,8 @@
           <paper-icon-item class="item">
             <iron-icon icon="settings" item-icon></iron-icon>
             <paper-item-body two-line>
-              <div>{{item.displayName}}</div>
-              <div secondary>{{item.count}}</div>
+              <div>{{item.info.originalName}}</div>
+              <div secondary>{{item.type}}</div>
             </paper-item-body>
             <span class="flex"></span>
             <paper-icon-button icon="delete" on-tap="onDeleteFile"></paper-icon-button>
@@ -84,7 +84,7 @@
       },
 
       handleResponse: function(e, request) {
-        this.files = request.response
+        this.files = request.response;
       },
 
       onUploadFile: function() {
@@ -96,36 +96,30 @@
           return;
         }
 
-        var formData = new FormData();
-
-        // Add the display name
-        formData.append('displayName', 'My display name');
-
         // Add files to the form data
+        var formData = new FormData();
         for (var i = 0; i < this.uploadFileList.length; i++) {
           formData.append('datafile-' + i, this.uploadFileList[i]);
         }
 
         // Create the request
         var request = new XMLHttpRequest();
-        request.open('POST', '/file');
-        request.send(formData);
-  
         var self = this;
-        setTimeout(function() {
+        request.onload = function() {
           self.$.files_request.generateRequest();
-        }, 250);
+        };
+        request.open('POST', '/file?type=yeti-wifi-memory');
+        request.send(formData);
       },
 
       onDeleteFile: function(e) {
         var request = new XMLHttpRequest();
+        var self = this;
+        request.onload = function() {
+          self.$.files_request.generateRequest();
+        };
         request.open('DELETE', '/file/' + e.model.item.id);
         request.send();
-  
-        var self = this;
-        setTimeout(function() {
-          self.$.files_request.generateRequest();
-        }, 250);
       }
     });
 
