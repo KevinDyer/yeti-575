@@ -8,6 +8,7 @@
 
   var Promise = require('promise');
   var express = require('express');
+  var bodyParser = require('body-parser');
   var multer = require('multer');
   var mongoose = require('mongoose');
   var UtilFs = require('./../lib/util/util-fs');
@@ -86,6 +87,22 @@
       console.log(err);
       res.end();
     });
+  })
+  .delete(bodyParser.json(), function(req, res) {
+    var location = JSON.parse(req.query.location);
+
+    var Parser = getParserFromType(location.type);
+    if (!Parser) {
+      res.sendStatus(400);
+    } else {
+      var parser = new Parser();
+      parser.removeLocation(location)
+      .then(function(result) {
+        res.status(204).json(result);
+      }, function(err) {
+        res.sendStatus(500);
+      });
+    }
   });
 
   module.exports = router;

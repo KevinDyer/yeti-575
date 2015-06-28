@@ -22,7 +22,7 @@
 
       <div class="container fit">
 
-        <iron-selector selectedItems="{{selectedItems}}" multi>
+        <iron-selector selected-values="{{selectedValues}}" multi>
         <template is="dom-repeat" items="{{files}}">
           <paper-icon-item class="item">
             <iron-icon icon="settings" item-icon></iron-icon>
@@ -42,6 +42,10 @@
 
     <paper-dialog id="dialog">
       <h2>Choose file to upload</h2>
+      <paper-radio-group selected="{{type}}">
+        <paper-radio-button name="yeti-wifi">Yeti Wifi</paper-radio-button>
+        <paper-radio-button name="yeti-wifi-memory">Yeti Wifi (memory)</paper-radio-button>
+      </paper-radio-group>
       <input type="file" files="{{uploadFileList::change}}" />
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -73,14 +77,10 @@
         uploadFileList: {
           type: Object
         },
-        selectedItems: {
+        selectedValues: {
           type: Array,
-          observer: '_selectedItemsChanged'
+          value: function() { return []; }
         }
-      },
-
-      _selectedItemsChanged: function() {
-        console.log(this.selectedItems);
       },
 
       handleResponse: function(e, request) {
@@ -108,18 +108,20 @@
         request.onload = function() {
           self.$.files_request.generateRequest();
         };
-        request.open('POST', '/file?type=yeti-wifi-memory');
+        request.open('POST', '/file?type=' + this.type);
         request.send(formData);
       },
 
       onDeleteFile: function(e) {
+        var location = e.model.item;
+
         var request = new XMLHttpRequest();
         var self = this;
         request.onload = function() {
           self.$.files_request.generateRequest();
         };
-        request.open('DELETE', '/file/' + e.model.item.id);
-        request.send();
+        request.open('DELETE', '/file?location=' + JSON.stringify(location));
+        request.send(location.info);
       }
     });
 

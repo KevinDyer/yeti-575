@@ -1,9 +1,11 @@
 {
   "name": "yeti-575",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The backend processing for project yeti.",
   "main": "app.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "PORT=9000 node app.js"
+  },
   "keywords": [
     "node",
     "npm",
@@ -13,6 +15,7 @@
   ],
   "author": "KevinDyer <kevin.m.dyer@gmail.com>",
   "dependencies": {
+    "body-parser": "^1.13.1",
     "express": "^4.12.4",
     "mongoose": "^4.0.5",
     "morgan": "^1.5.3",
