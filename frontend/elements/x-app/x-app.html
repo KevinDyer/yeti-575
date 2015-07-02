@@ -22,19 +22,22 @@
 
       <div class="container fit">
 
-        <iron-selector selected-values="{{selectedValues}}" multi>
-        <template is="dom-repeat" items="{{files}}">
-          <paper-icon-item class="item">
+        <iron-selector items="{{locations}}" multi>
+        <template is="dom-repeat" items="{{locations}}">
+          <paper-icon-item class="item" on-tap="onLocationTapped">
             <iron-icon icon="settings" item-icon></iron-icon>
             <paper-item-body two-line>
-              <div>{{item.info.originalName}}</div>
+              <div>{{item.name}}</div>
               <div secondary>{{item.type}}</div>
             </paper-item-body>
             <span class="flex"></span>
-            <paper-icon-button icon="delete" on-tap="onDeleteFile"></paper-icon-button>
+            <div class="count">{{item.info.count}}</div>
+            <paper-icon-button icon="delete" on-tap="onDeleteLocation"></paper-icon-button>
           </paper-icon-item>
         </template>
         </iron-selector>
+
+        <array-selector id="selector" items="{{locations}}" selected="{{selectedLocations}}"></array-selector>
 
       </div>
 
@@ -54,37 +57,47 @@
     </paper-dialog>
 
     <iron-ajax
-        id="files_request"
+        id="location-request"
         auto
-        url="/file"
+        url="/location"
         handle-as="json"
-        on-response="handleResponse">
+        on-response="onLocationResponse">
     </iron-ajax>
 
   </template>
 </dom-module>
 
 <script>
-  (function(Polymer) {
+  (function() {
 
     Polymer({
       is: 'x-app',
 
       properties: {
-        files: {
+        locations: {
           type: Array
         },
         uploadFileList: {
           type: Object
         },
-        selectedValues: {
+        selectedLocations: {
           type: Array,
           value: function() { return []; }
         }
       },
 
-      handleResponse: function(e, request) {
-        this.files = request.response;
+      onLocationResponse: function(e, request) {
+        this.locations = request.response;
+      },
+
+      onLocationTapped: function(e) {
+        var location = e.model.item;
+
+        var request = new XMLHttpRequest();
+      },
+
+      _getLocationList: function() {
+        this.$['location-request'].generateRequest();
       },
 
       onUploadFile: function() {
@@ -106,24 +119,26 @@
         var request = new XMLHttpRequest();
         var self = this;
         request.onload = function() {
-          self.$.files_request.generateRequest();
+          self._getLocationList();
         };
         request.open('POST', '/file?type=' + this.type);
         request.send(formData);
       },
 
-      onDeleteFile: function(e) {
+      onDeleteLocation: function(e) {
         var location = e.model.item;
+        var type = location.type;
+        var id = location.id;
 
         var request = new XMLHttpRequest();
         var self = this;
         request.onload = function() {
-          self.$.files_request.generateRequest();
+          self._getLocationList();
         };
-        request.open('DELETE', '/file?location=' + JSON.stringify(location));
-        request.send(location.info);
+        request.open('DELETE', '/location?type=' + type + '&id=' + id);
+        request.send();
       }
     });
 
-  }(Polymer));
+  }());
 </script>

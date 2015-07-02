@@ -6,6 +6,7 @@
   var morgan = require('morgan');
   var Promise = require('promise');
   var fileRouter = require('./routes/file');
+  var locationRouter = require('./routes/location');
 
   var Server = function() {
     this.app = express();
@@ -20,6 +21,7 @@
 
     // Add the file route
     this.app.use('/file', fileRouter);
+    this.app.use('/location', locationRouter);
   };
 
   Server.prototype.connect = function(port) {
