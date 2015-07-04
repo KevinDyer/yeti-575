@@ -41,7 +41,6 @@
   .delete(function(req, res) {
     var type = req.query.type;
     var id = req.query.id;
-    console.log(type, id);
 
     var Parser = getParserFromType(type);
     if (!Parser) {
